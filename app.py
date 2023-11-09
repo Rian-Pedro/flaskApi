@@ -4,7 +4,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
+CORS(app, resources={r"/*": {"origins": "https://teste-react-s4kc.vercel.app/"}})
 
 client = MongoClient("mongodb+srv://admin:{}@talkhub.b0k5fuv.mongodb.net/?retryWrites=true&w=majority".format("xLR1bW5fL1Z8vogq"))
 db = client.test
