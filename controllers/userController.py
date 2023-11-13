@@ -12,7 +12,7 @@ def after(response):
     method = request.method
 
     if path == '/user' and method == 'GET':
-        body = request.get_json()
+        body = request.args.to_dict()
 
         if 'token' in body:
             decode_token = JWT.decode_token(body.get('token'))
@@ -23,8 +23,7 @@ def after(response):
                 return jsonify({'status': 202, 'token': body.get('token')})
             
         else: 
-            code = JWT.create_token(body)
-            print(code)
+            return response
     
     return response
 
@@ -49,8 +48,8 @@ def userPost():
 # Login User
 @app.route("/user", methods=['GET'])
 def userGet():
-   user = request.get_json()
-   res = UserModel.User(user).login()
+   user = request.args.to_dict()
+   res = UserModel.User(user, None).login()
    
    if res['status'] == 202:
        return jsonify(res)
