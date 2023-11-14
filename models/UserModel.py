@@ -1,6 +1,7 @@
 from app import user_collection
 from utils import hashPass
 from utils import JWT
+from bson import ObjectId
 import os
 
 class User:
@@ -8,7 +9,8 @@ class User:
     self.teste = {'name': body.get('name', None), 
                   'nick': body.get('nick', None), 
                   'email': body.get('email'), 
-                  'pass': hashPass.hash_pass(body.get('pass'))}
+                  'pass': hashPass.hash_pass(body.get('pass')),
+                  'contacts': []}
     self.fileImg = fileImg
 
 
@@ -28,14 +30,30 @@ class User:
     os.makedirs(uplaod_url, exist_ok=True)
     self.fileImg.save(os.path.join(uplaod_url, str(userId) + '-' + self.fileImg.filename))
 
-
-  def get_user(self):
-    user = user_collection.find_one({"email": self.teste.get('email')})
+  @staticmethod
+  def get_user(email):
+    user = user_collection.find_one({"email": email})
     return user
+  
+  @staticmethod
+  def insert_contact(email, id): 
+    user = user_collection.find_one({"email": email})
+    user_collection.update_one( 
+      {"_id": ObjectId(id)}, 
+      {
+        '$push': {
+          'contacts': {
+            'name': user.get('name'), 
+            'nick': user.get('nick'), 
+            'email': user.get('email'), 
+            'chat': []
+          }
+        }
+      })
 
 
   def login(self):
-    user = self.get_user()
+    user = self.get_user(self.teste.get('email'))
 
     if user:
       if hashPass.compare_hash(user['pass'], self.teste['pass']):

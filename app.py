@@ -10,6 +10,7 @@ client = MongoClient("mongodb+srv://admin:{}@talkhub.b0k5fuv.mongodb.net/?retryW
 db = client.test
 
 user_collection = db.users
+contact_collection = db.contatcs
 user_config_collection = db.userconfigs
 
 posts = db.posts

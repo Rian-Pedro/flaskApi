@@ -1,6 +1,6 @@
 from app import app
 from flask import request, jsonify, g, send_file
-from models import UserModel
+from models import UserModel, ContactModel
 from utils import JWT
 
 import os
@@ -55,6 +55,32 @@ def userGet():
        return jsonify(res)
    else: 
        return jsonify(res)
+
+# Pegar usuário
+@app.route("/getUser", methods=['GET'])
+def getUser():
+    contactEmail = request.args.to_dict()
+    contact = UserModel.User.get_user(contactEmail.get('email'))
+
+    return jsonify({
+        'name': contact.get('name'),
+        'nick': contact.get('nick'),
+        'userImg': contact.get('userImg'),
+        'id': str(contact.get('_id'))
+    })
+
+
+# Criar contato
+@app.route("/newContact", methods=['POST'])
+def newContact():
+    data = request.get_json()
+    contactModel = ContactModel.Contact({'userId': data.get('userId'), 
+                                         'contactId': data.get('contactId')})
+    contactModel.insert_contact()
+    
+    # UserModel.User.insert_contact(user.get('email'), user.get('id'))
+
+    return jsonify({'status': 202})
    
 
 @app.route('/getImg', methods=['GET'])
