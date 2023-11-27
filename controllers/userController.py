@@ -1,7 +1,9 @@
 from app import app
 from flask import request, jsonify, g, send_file
-from models import UserModel, ContactModel
+from bson import json_util
+from models import UserModel, ContactModel, MessageModel
 from utils import JWT
+import json
 
 import os
 
@@ -26,6 +28,7 @@ def after(response):
             return response
     
     return response
+
 
 # Register User
 @app.route("/user", methods=['POST'])
@@ -56,18 +59,27 @@ def userGet():
    else: 
        return jsonify(res)
 
+
 # Pegar usuário
 @app.route("/getUser", methods=['GET'])
 def getUser():
     contactEmail = request.args.to_dict()
-    contact = UserModel.User.get_user(contactEmail.get('email'))
+    print(request.args.to_dict())
 
-    return jsonify({
-        'name': contact.get('name'),
-        'nick': contact.get('nick'),
-        'userImg': contact.get('userImg'),
-        'id': str(contact.get('_id'))
-    })
+    if 'email' in contactEmail and contactEmail['email']:
+        contact = UserModel.User.get_user(contactEmail['email'], None)
+    elif 'contactId' in contactEmail and contactEmail['contactId']:
+        contact = UserModel.User.get_user(None, contactEmail['contactId'])
+
+    if contact is not None:
+        return jsonify({
+            'name': contact.get('name'),
+            'nick': contact.get('nick'),
+            'userImg': contact.get('userImg'),
+            'id': str(contact.get('_id'))
+        })
+    else:
+        return jsonify({"error": "Usuário não encontrado"}), 404
 
 
 # Criar contato
@@ -78,11 +90,34 @@ def newContact():
                                          'contactId': data.get('contactId')})
     contactModel.insert_contact()
     
-    # UserModel.User.insert_contact(user.get('email'), user.get('id'))
-
     return jsonify({'status': 202})
    
 
+# Pegar Imagem
 @app.route('/getImg', methods=['GET'])
 def getImg():
     return send_file(path_or_file=request.args.get('src'))
+
+
+@app.route('/getAllUsers', methods=['GET'])
+def getAllUsers():
+    userId = request.args.to_dict().get('userId')
+    
+    teste = ContactModel.Contact.getAllContacts(userId)
+    lista = []
+    
+    for t in teste:
+        t['_id'] = str(t['_id'])
+        lista.append(t)
+
+    return jsonify(lista)
+
+@app.route('/getMessages', methods=['GET'])
+def getMessages():
+    
+    userId = request.args.to_dict().get('userId')
+    friendId = request.args.to_dict().get('friendId')
+
+    result = MessageModel.Message.get_messages(userId, friendId)
+
+    return jsonify(result)

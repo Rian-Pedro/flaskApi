@@ -12,4 +12,4 @@ class Contact:
   @staticmethod
   def getAllContacts(userId):
     contactList = contact_collection.find({'userId': userId})
-    print(contactList)
+    return contactList

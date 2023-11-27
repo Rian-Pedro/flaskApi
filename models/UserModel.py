@@ -30,10 +30,17 @@ class User:
     os.makedirs(uplaod_url, exist_ok=True)
     self.fileImg.save(os.path.join(uplaod_url, str(userId) + '-' + self.fileImg.filename))
 
+
   @staticmethod
-  def get_user(email):
-    user = user_collection.find_one({"email": email})
-    return user
+  def get_user(email, id):
+    if id is None:
+      print('aqui email')
+      user = user_collection.find_one({"email": email})
+      return user
+    else:
+      user = user_collection.find_one({"_id": ObjectId(id)})
+      return user
+  
   
   @staticmethod
   def insert_contact(email, id): 
@@ -53,7 +60,7 @@ class User:
 
 
   def login(self):
-    user = self.get_user(self.teste.get('email'))
+    user = self.get_user(self.teste.get('email'), None)
 
     if user:
       if hashPass.compare_hash(user['pass'], self.teste['pass']):
