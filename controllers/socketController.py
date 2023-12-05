@@ -55,9 +55,16 @@ def handle_message(data):
     'hour': datetime.now().strftime('%H:%M:%S')
   }
 
-  socketio.emit("message_sended", msg, room=room)
-  socketio.emit("message_sended", msg, room=teste3)
+  socketio.emit("message_sended", msg, room=sender)
+  socketio.emit("message_sended", msg, room=recipient)
+  socketio.emit("notification", {"sender": sender}, room=recipient)
   message = MessageModel.Message(msg)
 
   message.create_message()
 
+@socketio.on('typing')
+def handle_typing(data):
+  sender = data['sender']
+  recipient = data['recipient']
+
+  socketio.emit('user_typing', {"sender": sender, "recipient": recipient}, room=recipient)
