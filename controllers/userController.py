@@ -30,7 +30,7 @@ def after(response):
     return response
 
 
-# Register User
+# Register User 
 @app.route("/user", methods=['POST'])
 def userPost():
     data = {'name': request.form['name'], 

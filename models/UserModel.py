@@ -27,6 +27,7 @@ class User:
 
   def set_img(self, userId): 
     uplaod_url = './uploads'
+    print(os.getcwd)
     os.makedirs(uplaod_url, exist_ok=True)
     self.fileImg.save(os.path.join(uplaod_url, str(userId) + '-' + self.fileImg.filename))
 
