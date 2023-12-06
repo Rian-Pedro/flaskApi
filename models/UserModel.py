@@ -18,7 +18,7 @@ class User:
     if not user_collection.find_one({'email': self.teste['email']}):
       user = user_collection.insert_one(self.teste)
       userId = user.inserted_id
-      user = user_collection.update_one(filter={'_id': userId}, update={'$set': {'userImg': './uploads/' + str(userId) + '-' + self.fileImg.filename}})
+      user = user_collection.update_one(filter={'_id': userId}, update={'$set': {'userImg': "{}/{}".format(os.getcwd(), 'uploads') + str(userId) + '-' + self.fileImg.filename}})
       self.set_img(userId)
       return user
     else: 
@@ -26,7 +26,7 @@ class User:
 
 
   def set_img(self, userId): 
-    uplaod_url = './uploads'
+    uplaod_url = "{}/{}".format(os.getcwd(), 'uploads')
     print(os.getcwd())
     os.makedirs(uplaod_url, exist_ok=True)
     self.fileImg.save(os.path.join(uplaod_url, str(userId) + '-' + self.fileImg.filename))
