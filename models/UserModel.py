@@ -71,3 +71,12 @@ class User:
         return {'status': 406, 'message': 'Senha incorreta'}
     else:
       return {'status': 406, 'message': 'Usuário não existente'}
+    
+
+  @staticmethod
+  def update_pass(newPass, userEmail):
+    try:
+      user_collection.update_one({"email": userEmail}, {'$set': {'pass': hashPass.hash_pass(newPass)}})
+      return {"status": 200}
+    except Exception as e:
+      return {"status": 500, "message": "algo deu errado no servidor"}

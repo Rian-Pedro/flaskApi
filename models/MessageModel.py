@@ -15,15 +15,7 @@ def organizaDate(dic):
 class Message:
   def __init__(self, body):
     self.body = body
-
-  def create_message(self):
-    message = message_collection.insert_one(self.body)
-
-    for value in message:
-      value['id'] = str(value['_id'])
-      del value['_id']
-
-    return message
+    
     
   @staticmethod
   def get_messages(userId, friendId):

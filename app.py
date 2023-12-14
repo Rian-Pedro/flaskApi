@@ -1,10 +1,8 @@
 from flask import Flask
 from pymongo import MongoClient
 from flask_cors import CORS
-from flask_socketio import SocketIO
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*", logger=True)
 
 CORS(app, resources={r"/*": {"origins": "*"}})
 
@@ -18,7 +16,5 @@ message_collection = db.messages
 
 posts = db.posts
 
-from controllers import userController, socketController
+from controllers import userController, forgotController
 from models import UserModel
-
-socketController.init_socket(socketio)
