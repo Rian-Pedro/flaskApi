@@ -125,3 +125,7 @@ def getMessages():
 @app.route("/teste", methods=["GET"])
 def teste():
     return "teste hello"
+
+@app.route("/start", methods=['GET'])
+def start():
+    return "start"
