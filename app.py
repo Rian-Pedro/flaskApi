@@ -1,6 +1,7 @@
 from flask import Flask
 from pymongo import MongoClient
 from flask_cors import CORS
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -18,3 +19,9 @@ posts = db.posts
 
 from controllers import userController, forgotController
 from models import UserModel
+from utils import Clean
+
+scheduler = BackgroundScheduler()
+
+scheduler.add_job(Clean.clean, 'interval', hours=3)
+scheduler.start()

@@ -121,3 +121,7 @@ def getMessages():
     result = MessageModel.Message.get_messages(userId, friendId)
 
     return jsonify(result)
+
+@app.route("/teste", methods=["GET"])
+def teste():
+    return "teste hello"
