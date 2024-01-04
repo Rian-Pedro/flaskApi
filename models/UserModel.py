@@ -80,3 +80,8 @@ class User:
       return {"status": 200}
     except Exception as e:
       return {"status": 500, "message": "algo deu errado no servidor"}
+    
+  @staticmethod
+  def delUser(userId):
+    user_collection.delete_one({{"_id": ObjectId(userId)}})
+    return "ok"

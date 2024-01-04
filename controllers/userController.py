@@ -122,8 +122,13 @@ def getMessages():
 
     return jsonify(result)
 
-@app.route("/teste", methods=["GET"])
-def teste():
+@app.route("/deleteUser", methods=["GET"])
+def deleteUser():
+
+    userId = request.args.to_dict().get('userId')
+
+    result = UserModel.User.delUser(userId)
+
     return "teste hello"
 
 @app.route("/start", methods=['GET'])
