@@ -126,6 +126,7 @@ def getMessages():
 def deleteUser():
 
     userId = request.args.to_dict().get('userId')
+    print(userId)
 
     result = UserModel.User.delUser(userId)
 
