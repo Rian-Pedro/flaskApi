@@ -83,5 +83,5 @@ class User:
     
   @staticmethod
   def delUser(userId):
-    user_collection.delete_one({{"_id": ObjectId(userId)}})
+    user_collection.delete_one({"_id": ObjectId(userId)})
     return "ok"
